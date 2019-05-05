@@ -30,12 +30,6 @@ app.get("/random", function(req, res) {
     });
   });
 
-  // temporary, generating cert
-  app.get("/.well-known/acme-challenge/:content", function(req, res) {
-    res.send("25i4bBhmT-4tCqbqZThw73Q2bc76dFT3y-6pUsAaAUY.kCZXYbeb-FcWuqB9uL3rQkaS3eH5U_Jvb28bt-NHMcE");
-  });
-
-  
 });
 
 console.log(__dirname);
