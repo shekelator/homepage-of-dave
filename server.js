@@ -3,8 +3,17 @@ var express = require("express");
 var logfmt = require("logfmt");
 var app = express();
 var fs = require("fs");
+var forceSSL = require('express-force-ssl');
 
 app.use(logfmt.requestLogger());
+
+// force ssl
+app.use(forceSSL);
+app.set('forceSSLOptions', {
+  enable301Redirects: true,
+  trustXFPHeader: true,
+  httpsPort: process.env.PORT
+});
 
 app.set("views", __dirname + "/views");
 app.set("view engine", "jade");
