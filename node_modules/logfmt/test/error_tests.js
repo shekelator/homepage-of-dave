@@ -10,8 +10,18 @@ suite('logfmt.error', function() {
     logfmt.stream = new(require('./outstream'));
     logfmt.error(err);
     var id = logfmt.stream.lines[0].match(/id=(\d+)/)[1];
-    assert.equal(logfmt.stream.lines[0], 'error=true id=' + id + ' message=testing\n');
-    assert.equal(logfmt.stream.lines[1], 'error=true id=' + id + ' line=0 trace="Error: testing"\n');
+    var line1 = logfmt.parse(logfmt.stream.lines[0])
+    assert.equal(line1.error, true);
+    assert.equal(line1.id, id);
+    assert(line1.now);
+    assert.equal(line1.message, 'testing');
+
+    var line2 = logfmt.parse(logfmt.stream.lines[1])
+    assert.equal(line2.error, true);
+    assert.equal(line2.id, id);
+    assert(line2.now);
+    assert.equal(line2.line, '0');
+    assert.equal(line2.trace, 'Error: testing');
   });
 
   test('sends only a max number of log lines', function() {
@@ -21,4 +31,8 @@ suite('logfmt.error', function() {
     logfmt.error(err);
     assert.equal(logfmt.stream.lines.length, 3);
   });
+
+  test("doesn't blow up on a bad error object", function(){
+    logfmt.error({})
+  })
 })

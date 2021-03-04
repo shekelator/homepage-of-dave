@@ -1,10 +1,8 @@
-var _ = require('lodash');
-
 exports.log = function(data, stream) {
   this.stream = this.stream || process.stdout;
   if(stream == undefined) stream = this.stream;
 
-  var logData = _.extend({}, this.defaultData, data);
+  var logData = Object.assign({}, this.defaultData, data);
 
   if(this.timers){
     for(var key in this.timers){
@@ -23,7 +21,7 @@ exports.time = function(label) {
   var timer  = new logfmt();
   timer.stream = this.stream;
   timer.defaultData = this.defaultData;
-  timer.timers = _.extend({}, this.timers)
+  timer.timers = Object.assign({}, this.timers)
   timer.timers[label] = startTime;
   return timer;
 }
@@ -31,7 +29,7 @@ exports.time = function(label) {
 exports.namespace = function(object) {
   var logfmt = require('../logfmt');
   var namespaced = new logfmt()
-  var namespace  = _.extend({}, this.defaultData, object);
+  var namespace  = Object.assign({}, this.defaultData, object);
   namespaced.stream = this.stream;
   namespaced.defaultData = namespace
   namespaced.timers = this.timers;
@@ -43,10 +41,17 @@ exports.error = function(err, id) {
   if (id === undefined) {
     id = Math.random().toString().slice(2, 12);
   }
-  this.log({ error:true, id:id, message:err.message });
-  var stack = err.stack.split('\n');
-  for (var line in stack) {
-    if (line >= this.maxErrorLines) break;
-    this.log({ error:true, id:id, line:line, trace:stack[line] });
+  var errorLogger = this.namespace({
+    error: true,
+    id:id,
+    now: (new Date()).toISOString()
+  })
+  errorLogger.log({ message:err.message });
+  if (err.stack) {
+    var stack = err.stack.split('\n');
+    for (var line in stack) {
+      if (line >= this.maxErrorLines) break;
+      errorLogger.log({ line:line, trace:stack[line] });
+    }
   }
 }
