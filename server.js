@@ -36,11 +36,10 @@ app.get("/", function(req, res) {
 });
 app.get("/random", function(req, res) {
   let files;
-  const listCommand = new ListObjectsCommand({ Bucket: "dnix" })
+  const listCommand = new ListObjectsCommand({ Bucket: "dnix", Prefix: "family-pics" })
   s3Client.send(listCommand)
     .then(d => {
       files = d.Contents;
-      console.log(d);
       var fileIndex = Math.floor((Math.random() * files.length) + 1);
       var fileKey = files[fileIndex].Key;
       const picUrl = `https://dnix.nyc3.digitaloceanspaces.com/${fileKey}`;
