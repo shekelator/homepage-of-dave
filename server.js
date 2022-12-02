@@ -16,16 +16,6 @@ const s3Client = new S3Client({
     }
 });
 
-const s3Client = new S3Client({
-    endpoint: "https://nyc3.digitaloceanspaces.com",
-    forcePathStyle: false,
-    region: "nyc",
-    credentials: {
-      accessKeyId: process.env.SPACES_ACCESS_KEY,
-      secretAccessKey: process.env.SPACES_SECRET
-    }
-});
-
 let files;
 const listCommand = new ListObjectsCommand({ Bucket: "dnix" })
 s3Client.send(listCommand)
