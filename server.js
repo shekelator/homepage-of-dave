@@ -16,17 +16,23 @@ const s3Client = new S3Client({
     }
 });
 
-app.use(logfmt.requestLogger());
+app.use(logfmt.requestLogger(function(req, res) {
+  return {
+    method: req.method,
+    path: req.url,
+    status: res.statusCode
+  }
+}));
 
 // force ssl
-if (process.env.NODE_ENV !== 'LOCAL') {
-  app.use(forceSSL);
-  app.set('forceSSLOptions', {
-    enable301Redirects: true,
-    trustXFPHeader: true,
-    httpsPort: process.env.PORT
-  });
-}
+// if (process.env.NODE_ENV !== 'LOCAL') {
+//   app.use(forceSSL);
+//   app.set('forceSSLOptions', {
+//     enable301Redirects: true,
+//     trustXFPHeader: true,
+//     httpsPort: process.env.PORT
+//   });
+// }
 
 app.set("views", __dirname + "/views");
 app.set("view engine", "pug");
