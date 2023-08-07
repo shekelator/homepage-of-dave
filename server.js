@@ -16,13 +16,6 @@ const s3Client = new S3Client({
     }
 });
 
-let files;
-const listCommand = new ListObjectsCommand({ Bucket: "dnix" })
-s3Client.send(listCommand)
-  .then(d => {
-    files = d.Contents;
-    console.log(d);
-  });
 app.use(logfmt.requestLogger());
 
 // force ssl
