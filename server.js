@@ -7,7 +7,7 @@ const { S3Client, ListObjectsCommand } = require("@aws-sdk/client-s3");
 const s3Client = new S3Client({
     endpoint: "https://nyc3.digitaloceanspaces.com",
     forcePathStyle: false,
-    region: "nyc",
+    region: "us-east-1",
     credentials: {
       accessKeyId: process.env.SPACES_ACCESS_KEY,
       secretAccessKey: process.env.SPACES_SECRET
