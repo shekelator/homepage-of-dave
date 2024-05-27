@@ -40,7 +40,7 @@ app.get("/random", function(req, res) {
 
       const s3Stream = s3Client.send(getObjectCmd)
         .then(d => d.Body)
-        .catch(e => console.log(e);
+        .catch(e => console.log(e));
 
       s3Stream.on("error", function(err) {
         console.error(err);
