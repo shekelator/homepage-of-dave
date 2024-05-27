@@ -7,10 +7,10 @@ const { S3Client, ListObjectsCommand } = require("@aws-sdk/client-s3");
 const s3Client = new S3Client({
     forcePathStyle: false,
     region: "us-east-1",
-    // credentials: {
-    //   accessKeyId: process.env.SPACES_ACCESS_KEY,
-    //   secretAccessKey: process.env.SPACES_SECRET
-    // }
+    credentials: {
+      accessKeyId: process.env.SPACES_ACCESS_KEY,
+      secretAccessKey: process.env.SPACES_SECRET
+    }
 });
 
 app.use(logfmt.requestLogger(function(req, res) {
