@@ -2,7 +2,7 @@
 const express = require("express");
 const logfmt = require("logfmt");
 const app = express();
-const { S3Client, ListObjectsCommand } = require("@aws-sdk/client-s3");
+const { S3Client, ListObjectsCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
 
 const s3Client = new S3Client({
     forcePathStyle: false,
@@ -35,7 +35,12 @@ app.get("/random", function(req, res) {
       files = d.Contents;
       var fileIndex = Math.floor((Math.random() * files.length) + 1);
       var fileKey = files[fileIndex].Key;
-      const s3Stream = s3Client.getObject({ Bucket: "dnix", Key: fileKey }).createReadStream();
+
+      const getObjectCmd = new GetObjectCommand({ Bucket: "dnix", Key: fileKey });
+
+      const s3Stream = s3Client.send(getObjectCmd)
+        .then(d => d.Body)
+        .catch(e => console.log(e);
 
       s3Stream.on("error", function(err) {
         console.error(err);
