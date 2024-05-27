@@ -5,7 +5,6 @@ const app = express();
 const { S3Client, ListObjectsCommand } = require("@aws-sdk/client-s3");
 
 const s3Client = new S3Client({
-    endpoint: "https://nyc3.digitaloceanspaces.com",
     forcePathStyle: false,
     region: "us-east-1",
     credentials: {
@@ -36,12 +35,15 @@ app.get("/random", function(req, res) {
       files = d.Contents;
       var fileIndex = Math.floor((Math.random() * files.length) + 1);
       var fileKey = files[fileIndex].Key;
-      const picUrl = `https://dnix.nyc3.digitaloceanspaces.com/${fileKey}`;
-      console.log(`Redirecting to ${picUrl}`);
-      res.redirect(picUrl);
+      const s3Stream = s3.getObject({ Bucket: "dnix", Key: fileKey }).createReadStream();
+
+      s3Stream.on("error", function(err) {
+        console.error(err);
+        res.status(500).send("An error occurred");
+      });
+      s3Stream.pipe(res);
   })
   .catch(e => console.log(e));
-
 });
 
 console.log(__dirname);
