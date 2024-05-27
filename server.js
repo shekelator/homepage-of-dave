@@ -38,15 +38,12 @@ app.get("/random", function(req, res) {
 
       const getObjectCmd = new GetObjectCommand({ Bucket: "dnix", Key: fileKey });
 
-      const s3Stream = s3Client.send(getObjectCmd)
-        .then(d => d.Body)
+      s3Client.send(getObjectCmd)
+        .then(d => {
+          d.Body.pipe(res);
+        })
         .catch(e => console.log(e));
 
-      s3Stream.on("error", function(err) {
-        console.error(err);
-        res.status(500).send("An error occurred");
-      });
-      s3Stream.pipe(res);
   })
   .catch(e => console.log(e));
 });
