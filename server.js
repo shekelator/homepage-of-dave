@@ -7,10 +7,10 @@ const { S3Client, ListObjectsCommand } = require("@aws-sdk/client-s3");
 const s3Client = new S3Client({
     forcePathStyle: false,
     region: "us-east-1",
-    credentials: {
-      accessKeyId: process.env.SPACES_ACCESS_KEY,
-      secretAccessKey: process.env.SPACES_SECRET
-    }
+    // credentials: {
+    //   accessKeyId: process.env.SPACES_ACCESS_KEY,
+    //   secretAccessKey: process.env.SPACES_SECRET
+    // }
 });
 
 app.use(logfmt.requestLogger(function(req, res) {
@@ -35,7 +35,7 @@ app.get("/random", function(req, res) {
       files = d.Contents;
       var fileIndex = Math.floor((Math.random() * files.length) + 1);
       var fileKey = files[fileIndex].Key;
-      const s3Stream = s3.getObject({ Bucket: "dnix", Key: fileKey }).createReadStream();
+      const s3Stream = s3Client.getObject({ Bucket: "dnix", Key: fileKey }).createReadStream();
 
       s3Stream.on("error", function(err) {
         console.error(err);
